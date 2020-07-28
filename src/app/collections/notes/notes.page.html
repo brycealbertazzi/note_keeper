@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title size="large" class="ion-text-center ion-bold">{{notesCollection.name}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let note of notesCollection.notes">
+      <ion-icon name="mail-outline" slot="end"></ion-icon>
+      <ion-text>{{note.text}}</ion-text>
+    </ion-item>
+  </ion-list>
+
+  <div class="ion-padding">
+    <ion-button color="primary">
+      <ion-icon name="add-circle-outline" slot="end"></ion-icon>
+      Add Note
+    </ion-button>
+  </div>
+</ion-content>
