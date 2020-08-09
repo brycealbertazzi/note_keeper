@@ -51,7 +51,8 @@ export class CollectionsService {
   constructor() { }
 
   addCollection(collection: Collection) {
-    this.collections = [...this.collections, collection];
+    this.collections = [...this.collections].concat(collection);
+    console.log(this.getCollections());
   }
 
   getCollections() {

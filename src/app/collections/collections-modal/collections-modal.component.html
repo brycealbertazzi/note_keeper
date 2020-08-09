@@ -1,11 +1,12 @@
-<div>
-  <ion-title class="ion-text-center ion-margin">New Collection</ion-title>
-    <ion-item>
-      <ion-label position="floating">Collection Name</ion-label>
-      <ion-input type="text" placeholder="Enter collection name..." [collectionName]></ion-input>
-    </ion-item>
-    <ion-button (click)="closeModal()">
-      Confirm
-    </ion-button>
-    
-</div>
+<form (ngSubmit)="onCreateCollection()" #form="ngForm">
+  <div>
+    <ion-title class="ion-text-center ion-margin">New Collection</ion-title>
+      <ion-item>
+        <ion-label position="floating">Collection Name</ion-label>
+        <ion-input type="text" placeholder="Enter collection name..." ngModel name="collection-name" required></ion-input>
+      </ion-item>
+      <ion-button type="submit" expand="block" [disabled]="form.invalid">
+        Confirm
+      </ion-button>
+  </div>
+</form>

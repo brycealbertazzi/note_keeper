@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { CollectionsPageRoutingModule } from './collections-routing.module';
 
 import { CollectionsPage } from './collections.page';
+import { CollectionsModalComponent } from './collections-modal/collections-modal.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { CollectionsPage } from './collections.page';
     IonicModule,
     CollectionsPageRoutingModule
   ],
-  declarations: [CollectionsPage]
+  declarations: [CollectionsPage, CollectionsModalComponent],
+  entryComponents: [CollectionsModalComponent]
 })
 export class CollectionsPageModule {}

@@ -1,6 +1,7 @@
-import { Component, Input, Output } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { CollectionsService } from '../collections.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-collections-modal',
@@ -8,20 +9,25 @@ import { CollectionsService } from '../collections.service';
   styleUrls: ['./collections-modal.component.scss'],
 })
 export class CollectionsModalComponent {
+  @ViewChild('form', {static: true}) form: NgForm;
 
-  collectionName: string;
+  constructor(
+    private modalCtrl: ModalController,
+    private collectionsService: CollectionsService
+  ) {}
 
-  constructor(private modalController: ModalController,
-              private collectionsService: CollectionsService) {}
-
-  async closeModal() {
-    this.collectionsService.addCollection({
-      id: Math.random() * (1000000000),
-      name: this.collectionName,
-      notes: []
-    });
-    console.log(this.collectionName);
-    await this.modalController.dismiss();
+  onCreateCollection() {
+    if (this.form.invalid) {
+      return;
+    }
+    this.modalCtrl.dismiss(
+      {
+        collectionData: {
+          collectionName: this.form.value['collection-name']
+        }
+      },
+      'confirm'
+    );
   }
 
 }
