@@ -1,8 +1,13 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title size="large" class="ion-text-center ion-bold">{{notesCollection.name}}</ion-title>
+    <ion-title size="large" class="ion-text-center">{{notesCollection.name}}</ion-title>
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/', 'collections']">
+        <ion-icon name="home"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -14,9 +19,8 @@
       <ion-text>{{note.text}}</ion-text>
     </ion-item>
   </ion-list>
-
   <div class="ion-padding">
-    <ion-button color="primary">
+    <ion-button color="primary" [routerLink]="['/', 'collections', 'notes', 'add-note']">
       <ion-icon name="add-circle-outline" slot="end"></ion-icon>
       Add Note
     </ion-button>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Collection } from './collection';
+import { Collection } from './collection.model';
 import { CollectionsService } from './collections.service';
 import { ModalController, LoadingController } from '@ionic/angular';
 import { CollectionsModalComponent } from './collections-modal/collections-modal.component';
@@ -55,7 +55,6 @@ export class CollectionsPage implements OnInit {
 
   onGetSelectedCollection(id: number) {
     this.collectionsService.getSelectedCollection(id);
-    console.log(this.collectionsService.selectedCollection);
   }
 
 }

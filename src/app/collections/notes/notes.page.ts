@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CollectionsService } from '../collections.service';
-import { Collection } from '../collection';
+import { Collection } from '../collection.model';
 
 @Component({
   selector: 'app-notes',
@@ -15,6 +15,14 @@ export class NotesPage implements OnInit {
 
   ngOnInit() {
     this.notesCollection = this.collectionsService.selectedCollection;
+  }
+
+  ionViewWillEnter() {
+    this.notesCollection = this.collectionsService.selectedCollection;
+  }
+
+  addNote(note: string) {
+    console.log(note);
   }
 
 }
