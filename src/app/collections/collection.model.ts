@@ -1,7 +1,7 @@
 import { Note } from '../note.model';
 
 export interface Collection {
-    id: number;
+    id: string;
     name: string;
     notes: Note[];
 }

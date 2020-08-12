@@ -1,7 +1,9 @@
-import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter, Input } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { CollectionsService } from '../../collections.service';
 import { Router } from '@angular/router';
+import { Collection } from '../../collection.model';
+import { NotesPage } from '../notes.page';
 
 @Component({
   selector: 'app-add-note',
@@ -10,8 +12,9 @@ import { Router } from '@angular/router';
 })
 export class AddNotePage implements OnInit {
   @ViewChild('form', {static: true}) form: NgForm;
+  currentCollection: Collection;
 
-  constructor(private collectionsService: CollectionsService, private router: Router) { }
+  constructor(private collectionsService: CollectionsService, private router: Router, private notesPage: NotesPage) { }
 
   ngOnInit() {
   }
@@ -20,7 +23,8 @@ export class AddNotePage implements OnInit {
     if (this.form.invalid) {
       return;
     }
-    this.collectionsService.addNoteToCollection(this.collectionsService.selectedCollection.id, this.form.value['note-text']);
+    this.currentCollection = this.notesPage.currentCollection;
+    this.collectionsService.addNoteToCollection(this.currentCollection.id, this.form.value['note-text']);
     this.router.navigateByUrl('/collections/notes');
   }
 

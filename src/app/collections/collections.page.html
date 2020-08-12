@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title size="large" class="ion-text-center ion-bold">My Note Collections</ion-title>
+    <ion-title size="large" class="ion-text-center">My Note Collections</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -10,7 +10,7 @@
       <ion-card-title>{{collection.name}}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <ion-button color="secondary" (click)="onGetSelectedCollection(collection.id)" [routerLink]="['/', 'collections', collection.id]">
+      <ion-button color="secondary" (click)="goToNotes(collection.id)" [routerLink]="['/', 'collections', collection.id]">
         <ion-icon name="book-outline" slot="end"></ion-icon>
         Notes
       </ion-button>

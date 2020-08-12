@@ -20,11 +20,15 @@ export class CollectionsPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.loadedCollections = this.collectionsService.getCollections();
+    this.collectionsService.getCollections().subscribe(collections => {
+      this.loadedCollections = collections;
+    });
   }
 
   ionViewWillEnter() {
-    this.loadedCollections = this.collectionsService.getCollections();
+    this.collectionsService.getCollections().subscribe(collections => {
+      this.loadedCollections = collections;
+    });
   }
 
   onAddCollection() {
@@ -40,21 +44,24 @@ export class CollectionsPage implements OnInit {
         .then(loadingEl => {
           loadingEl.present();
           const data = resultData.data.collectionData;
-          const newCollection = {
-            id: Math.random() * 1000000,
+          const newCollection: Collection = {
+            id: JSON.stringify(Math.random() * 1000000),
             name: data.collectionName,
             notes: []
           };
-          this.collectionsService.addCollection(newCollection);
-          this.loadedCollections = this.collectionsService.getCollections();
-          setTimeout(() => loadingEl.dismiss(), 1000);
+          console.log(newCollection);
+          this.collectionsService.addCollection(newCollection).subscribe(() => {
+            loadingEl.dismiss();
+            this.collectionsService.getCollections().subscribe(collections => {
+              this.loadedCollections = collections;
+            });
+          });
         });
       }
     });
   }
 
-  onGetSelectedCollection(id: number) {
-    this.collectionsService.getSelectedCollection(id);
+  goToNotes(id: string) {
   }
 
 }

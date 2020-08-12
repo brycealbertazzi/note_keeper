@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title size="large" class="ion-text-center">{{notesCollection.name}}</ion-title>
+    <ion-title size="large" class="ion-text-center">{{currCollectionName}}</ion-title>
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
@@ -13,8 +13,8 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item *ngFor="let note of notesCollection.notes">
+  <ion-list *ngIf="currCollectionNotes.length > 0">
+    <ion-item *ngFor="let note of currCollectionNotes">
       <ion-icon name="mail-outline" slot="end"></ion-icon>
       <ion-text>{{note.text}}</ion-text>
     </ion-item>

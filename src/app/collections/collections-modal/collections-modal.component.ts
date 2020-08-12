@@ -30,4 +30,8 @@ export class CollectionsModalComponent {
     );
   }
 
+  onCancel() {
+    this.modalCtrl.dismiss();
+  }
+
 }
