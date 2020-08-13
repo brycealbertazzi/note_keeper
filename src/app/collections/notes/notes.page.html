@@ -1,8 +1,8 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title size="large" class="ion-text-center">{{currCollectionName}}</ion-title>
+    <ion-title size="large" class="ion-text-center">{{title}}</ion-title>
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-back-button defaultHref="/collections"></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end">
       <ion-button [routerLink]="['/', 'collections']">
@@ -13,14 +13,14 @@
 </ion-header>
 
 <ion-content>
-  <ion-list *ngIf="currCollectionNotes.length > 0">
-    <ion-item *ngFor="let note of currCollectionNotes">
+  <ion-list>
+    <ion-item *ngFor="let note of notes">
       <ion-icon name="mail-outline" slot="end"></ion-icon>
       <ion-text>{{note.text}}</ion-text>
     </ion-item>
   </ion-list>
   <div class="ion-padding">
-    <ion-button color="primary" [routerLink]="['/', 'collections', 'notes', 'add-note']">
+    <ion-button color="primary" [routerLink]="['/', 'collections', id, 'add-note']">
       <ion-icon name="add-circle-outline" slot="end"></ion-icon>
       Add Note
     </ion-button>

@@ -3,7 +3,8 @@ import { NgForm } from '@angular/forms';
 import { CollectionsService } from '../../collections.service';
 import { Router } from '@angular/router';
 import { Collection } from '../../collection.model';
-import { NotesPage } from '../notes.page';
+import { LoadingController } from '@ionic/angular';
+import { Note } from 'src/app/note.model';
 
 @Component({
   selector: 'app-add-note',
@@ -13,19 +14,33 @@ import { NotesPage } from '../notes.page';
 export class AddNotePage implements OnInit {
   @ViewChild('form', {static: true}) form: NgForm;
   currentCollection: Collection;
+  id: string;
+  title: string;
+  notes: Note[];
 
-  constructor(private collectionsService: CollectionsService, private router: Router, private notesPage: NotesPage) { }
+  constructor(
+    private collectionsService: CollectionsService,
+    private loadingCtrl: LoadingController,
+    private router: Router
+  ) { }
 
   ngOnInit() {
+     this.currentCollection = this.collectionsService.selectedCollection;
+     this.id = this.currentCollection.id;
   }
 
   onAddNote() {
     if (this.form.invalid) {
       return;
     }
-    this.currentCollection = this.notesPage.currentCollection;
-    this.collectionsService.addNoteToCollection(this.currentCollection.id, this.form.value['note-text']);
-    this.router.navigateByUrl('/collections/notes');
+    this.loadingCtrl.create({message: 'Creating note...'}).then(loadingEl => {
+      loadingEl.present();
+    });
+    // tslint:disable-next-line: max-line-length
+    this.collectionsService.addNoteToCollectionToFirebase(this.collectionsService.selectedCollection.id, this.form.value['note-text']).subscribe(() => {
+      this.loadingCtrl.dismiss();
+      this.router.navigate(['/', 'collections', this.id]);
+    });
   }
 
 }

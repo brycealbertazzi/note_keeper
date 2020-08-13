@@ -20,13 +20,13 @@ export class CollectionsPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.collectionsService.getCollections().subscribe(collections => {
+    this.collectionsService.getCollectionsFromFirebase().subscribe(collections => {
       this.loadedCollections = collections;
     });
   }
 
   ionViewWillEnter() {
-    this.collectionsService.getCollections().subscribe(collections => {
+    this.collectionsService.getCollectionsFromFirebase().subscribe(collections => {
       this.loadedCollections = collections;
     });
   }
@@ -49,10 +49,9 @@ export class CollectionsPage implements OnInit {
             name: data.collectionName,
             notes: []
           };
-          console.log(newCollection);
-          this.collectionsService.addCollection(newCollection).subscribe(() => {
+          this.collectionsService.addCollection(newCollection.name, newCollection.notes).subscribe(() => {
             loadingEl.dismiss();
-            this.collectionsService.getCollections().subscribe(collections => {
+            this.collectionsService.getCollectionsFromFirebase().subscribe(collections => {
               this.loadedCollections = collections;
             });
           });

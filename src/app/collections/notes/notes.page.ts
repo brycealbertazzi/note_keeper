@@ -12,8 +12,9 @@ import { Note } from 'src/app/note.model';
 })
 export class NotesPage implements OnInit {
   currentCollection: Collection;
-  currCollectionName: string;
-  currCollectionNotes: Note[] = [];
+  id: string;
+  title: string;
+  notes: Note[];
 
   constructor(
     private collectionsService: CollectionsService,
@@ -25,25 +26,17 @@ export class NotesPage implements OnInit {
     this.activatedRoute.paramMap.subscribe(paramMap => {
       if (!paramMap.has('collectionId')) {
         this.navCtrl.navigateBack('/collections');
-        console.log('returned');
         return;
       }
-      this.collectionsService.getSelectedCollection(paramMap.get('collectionId')).subscribe(collection => {
+      this.collectionsService.getSelectedCollectionFromFirebase(paramMap.get('collectionId')).subscribe(collection => {
         this.currentCollection = collection;
-        this.currCollectionName = collection.name;
-        if (!(collection.notes === undefined || collection.notes === null)) {
-          // If we have at least 1 note
-          this.currCollectionNotes = collection.notes;
-        }
+        this.id = this.currentCollection.id;
+        this.title = this.currentCollection.name;
+        this.notes = this.currentCollection.notes;
       }, error => {
-        console.log("Could not fetch collection!" + error);
+        console.log('Could not fetch collection!' + error);
       });
     });
-  }
-
-
-  addNote(note: string) {
-    console.log(note);
   }
 
 }

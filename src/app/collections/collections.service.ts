@@ -5,7 +5,7 @@ import { NotesPage } from './notes/notes.page';
 import { HttpClient } from '@angular/common/http';
 import { tap, map } from 'rxjs/operators';
 import { registerLocaleData } from '@angular/common';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, pipe } from 'rxjs';
 
 export interface FirebaseCollectionData {
   name: string;
@@ -17,36 +17,46 @@ export interface FirebaseCollectionData {
 })
 
 export class CollectionsService {
-  private collections: [Collection];
+  // tslint:disable-next-line: variable-name
+  private _collections: Collection[];
+  // tslint:disable-next-line: variable-name
+  private _selectedCollection: Collection;
 
   constructor(private http: HttpClient) { }
 
-  addCollection(collection: Collection) {
+  addCollection(name: string, notes: Note[]) {
     // tslint:disable-next-line: max-line-length
-    let firebaseId: string;
-    return this.http.post<{name: string}>(`https://note-keeper-3e377.firebaseio.com/collections.json`, { ...collection, id: null })
-    .pipe(
-      map(resData => {
-        return this.collections.concat(collection);
-      })
-    );
+    const newCollection = {
+      id: null,
+      name,
+      notes
+    };
+    return this.http.post(`https://note-keeper-3e377.firebaseio.com/collections.json`, { ...newCollection, id: null });
   }
 
-  getCollections() {
+  get selectedCollection() {
+    return {...this._selectedCollection};
+  }
+
+  get collections() {
+    return [...this._collections];
+  }
+
+  getCollectionsFromFirebase() {
     return this.http.get<({[key: string]: FirebaseCollectionData})>(`https://note-keeper-3e377.firebaseio.com/collections.json`)
     .pipe(
       map(resData => {
-        let collections = [];
+        let c = [];
         for (const key in resData) {
           if (resData.hasOwnProperty(key)) {
             if (resData[key].notes === undefined || resData[key].notes === null) {
-              collections.push({
+              c.push({
                 id: key,
                 name: resData[key].name,
                 notes: []
               });
             } else {
-              collections.push({
+              c.push({
                 id: key,
                 name: resData[key].name,
                 notes: resData[key].notes
@@ -54,36 +64,51 @@ export class CollectionsService {
             }
           }
         }
-        return collections;
+        this._collections = c;
+        return c;
       })
     );
   }
 
-  getSelectedCollection(id: string) {
+  getSelectedCollectionFromFirebase(id: string) {
     return this.http.get<FirebaseCollectionData>(`https://note-keeper-3e377.firebaseio.com/collections/${id}.json`)
     .pipe(
       map(resData => {
-        const selectedCollection: Collection = {
+        const currSelectedCollection: Collection = {
           // tslint:disable-next-line: object-literal-shorthand
           id: id,
           name: resData.name,
           notes: resData.notes
         };
-        return selectedCollection;
+        if (currSelectedCollection.notes === null || currSelectedCollection.notes === undefined) {
+          currSelectedCollection.notes = [];
+        }
+        this._selectedCollection = currSelectedCollection;
+        return this.selectedCollection;
       })
     );
   }
 
-  addNoteToCollection(selectedColId: string, noteText: string) {
+  // Add a note to the selected collection
+  addNoteToCollectionToFirebase(id: string, noteText: string) {
+    const newNote: Note = {
+      id: JSON.stringify(Math.random() * 1000000),
+      text: noteText
+    };
+    const oldCollection: Collection = this.collections.find(c => c.id === id);
+    const newNotes: Note[] = [...oldCollection.notes, newNote];
+    const newCollection: Collection = {
+      id: null,
+      name: oldCollection.name,
+      notes: newNotes
+    };
+    // Update the collections in local storage
     this.collections.find(c => {
-      if (c.id === selectedColId) {
-        const note = {
-          text: noteText,
-          id: Math.random() * 1000000
-        };
-        c.notes = [...c.notes, note];
+      if (c.id === id) {
+        c.notes = newNotes;
       }
-    });
+    })
+    return this.http.put(`https://note-keeper-3e377.firebaseio.com/collections/${id}.json`, {...newCollection, id: null});
   }
 
 }

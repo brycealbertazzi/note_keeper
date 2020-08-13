@@ -2,7 +2,12 @@
   <ion-toolbar color="primary">
     <ion-title class="ion-text-center">Create Note</ion-title>
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-back-button defaultHref="/collections/id"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/', 'collections']">
+        <ion-icon name="home"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
