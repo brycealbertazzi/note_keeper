@@ -90,7 +90,7 @@ export class CollectionsService {
   }
 
   // Add a note to the selected collection
-  addNoteToCollectionToFirebase(id: string, noteText: string) {
+  addNoteToFirebase(id: string, noteText: string) {
     const newNote: Note = {
       id: JSON.stringify(Math.random() * 1000000),
       text: noteText
@@ -107,8 +107,40 @@ export class CollectionsService {
       if (c.id === id) {
         c.notes = newNotes;
       }
-    })
+    });
     return this.http.put(`https://note-keeper-3e377.firebaseio.com/collections/${id}.json`, {...newCollection, id: null});
+  }
+
+  editNoteFromFirebase(collectionId: string, noteId: string, noteText: string) {
+    const newNote: Note = {
+      id: noteId,
+      text: noteText
+    };
+    const editedCollection: Collection = this.collections.find(c => c.id === collectionId);
+    editedCollection.notes.map(note => {
+      if (note.id === noteId) {
+        note.text = noteText;
+      }
+    });
+    return this.http.put(`https://note-keeper-3e377.firebaseio.com/collections/${collectionId}.json`, {...editedCollection, id: null});
+  }
+
+  deleteNoteFromFirebase(noteId: string, collectionId: string) {
+    const oldCollection: Collection = this.collections.find(c => c.id === collectionId);
+    const newNotes: Note[] = oldCollection.notes.filter(note => note.id !== noteId);
+    console.log(newNotes);
+    const newCollection: Collection = {
+      id: null,
+      name: oldCollection.name,
+      notes: newNotes
+    };
+    // Update the collections in local storage
+    this.collections.find(c => {
+      if (c.id === collectionId) {
+        c.notes = newNotes;
+      }
+    });
+    return this.http.put(`https://note-keeper-3e377.firebaseio.com/collections/${collectionId}.json`, {...newCollection, id: null});
   }
 
 }

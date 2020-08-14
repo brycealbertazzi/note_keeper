@@ -37,7 +37,7 @@ export class AddNotePage implements OnInit {
       loadingEl.present();
     });
     // tslint:disable-next-line: max-line-length
-    this.collectionsService.addNoteToCollectionToFirebase(this.collectionsService.selectedCollection.id, this.form.value['note-text']).subscribe(() => {
+    this.collectionsService.addNoteToFirebase(this.collectionsService.selectedCollection.id, this.form.value['note-text']).subscribe(() => {
       this.loadingCtrl.dismiss();
       this.router.navigate(['/', 'collections', this.id]);
     });

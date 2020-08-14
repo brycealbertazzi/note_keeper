@@ -13,15 +13,28 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item *ngFor="let note of notes">
-      <ion-icon name="mail-outline" slot="end"></ion-icon>
-      <ion-text>{{note.text}}</ion-text>
-    </ion-item>
+  <ion-list class="ion-margin">
+    <ion-item-sliding *ngFor="let note of notes" #slidingItem>
+      <ion-item>
+        <ion-button slot="end" color="tertiary" (click)="onViewNote(note)">
+          <ion-icon name="mail-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+        <ion-text *ngIf="note.text.length < 150">{{note.text}}</ion-text>
+        <ion-text *ngIf="note.text.length >= 150">{{note.text.slice(0, 100) + '...'}}</ion-text>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option color="secondary" (click)="onEditNote(note, slidingItem)">
+          <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+        </ion-item-option>
+        <ion-item-option color="danger" (click)="onDeleteNote(note.id, slidingItem)">
+          <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+        </ion-item-option>
+      </ion-item-options> 
+    </ion-item-sliding>
   </ion-list>
   <div class="ion-padding">
     <ion-button color="primary" [routerLink]="['/', 'collections', id, 'add-note']">
-      <ion-icon name="add-circle-outline" slot="end"></ion-icon>
+      <ion-icon name="add-circle-outline" slot="icon-only"></ion-icon>
       Add Note
     </ion-button>
   </div>

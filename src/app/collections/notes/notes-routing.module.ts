@@ -9,12 +9,16 @@ const routes: Routes = [
     component: NotesPage
   },
   {
-    path: 'edit-note/:id',
+    path: 'edit-note/:noteId',
     loadChildren: () => import('./edit-note/edit-note.module').then( m => m.EditNotePageModule)
   },
   {
     path: 'add-note',
     loadChildren: () => import('./add-note/add-note.module').then( m => m.AddNotePageModule)
+  },
+  {
+    path: 'view-note/:noteId',
+    loadChildren: () => import('./view-note/view-note.module').then( m => m.ViewNotePageModule)
   }
 ];
 

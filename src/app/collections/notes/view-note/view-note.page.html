@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title class="ion-text-center">View Note</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/collections/collectionId"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/', 'collections']">
+        <ion-icon name="home"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+    <ion-text>{{this.viewedNote.text}}</ion-text>
+</ion-content>

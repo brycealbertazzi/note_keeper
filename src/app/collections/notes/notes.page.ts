@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CollectionsService } from '../collections.service';
 import { Collection } from '../collection.model';
-import { ActivatedRoute } from '@angular/router';
-import { NavController } from '@ionic/angular';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NavController, IonItemSliding, AlertController, LoadingController } from '@ionic/angular';
 import { Note } from 'src/app/note.model';
+import { NotesService } from './notes.service';
 
 @Component({
   selector: 'app-notes',
@@ -12,14 +13,18 @@ import { Note } from 'src/app/note.model';
 })
 export class NotesPage implements OnInit {
   currentCollection: Collection;
-  id: string;
+  collectionId: string;
   title: string;
   notes: Note[];
 
   constructor(
     private collectionsService: CollectionsService,
     private activatedRoute: ActivatedRoute,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private router: Router,
+    private alertCtrl: AlertController,
+    private loadingCtrl: LoadingController,
+    private notesService: NotesService
   ) {}
 
   ngOnInit() {
@@ -30,12 +35,54 @@ export class NotesPage implements OnInit {
       }
       this.collectionsService.getSelectedCollectionFromFirebase(paramMap.get('collectionId')).subscribe(collection => {
         this.currentCollection = collection;
-        this.id = this.currentCollection.id;
+        this.collectionId = this.currentCollection.id;
         this.title = this.currentCollection.name;
         this.notes = this.currentCollection.notes;
       }, error => {
         console.log('Could not fetch collection!' + error);
       });
+    });
+  }
+
+  onViewNote(note: Note) {
+    this.notesService.setSelectedNote(note);
+    this.router.navigate(['/', 'collections', this.collectionId, 'view-note', note.id]);
+  }
+
+  onEditNote(note: Note, slidingItem: IonItemSliding) {
+    slidingItem.close();
+    this.notesService.setSelectedNote(note);
+    this.router.navigate(['/', 'collections', this.collectionId, 'edit-note', note.id]);
+  }
+
+  onDeleteNote(noteId: string, slidingItem: IonItemSliding) {
+    slidingItem.close();
+    this.alertCtrl.create({
+      header: 'Delete Note',
+      message: 'Are you sure you want to delete this note? You cannot undo this action.',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Delete',
+          role: 'confirm',
+          handler: () => {
+            this.loadingCtrl.create({message: 'Deleting note...'}).then(loadingEl => {
+              loadingEl.present();
+            })
+            // Pass in the current collection id and the note id
+            this.collectionsService.deleteNoteFromFirebase(noteId, this.collectionId).subscribe(() => {
+              this.loadingCtrl.dismiss();
+              window.location.reload();
+              this.router.navigate(['/', 'collections', this.collectionId]);
+            });
+          }
+        }
+      ]
+    }).then(alertEl => {
+      alertEl.present();
     });
   }
 
