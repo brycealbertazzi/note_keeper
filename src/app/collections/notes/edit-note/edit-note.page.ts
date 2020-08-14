@@ -14,10 +14,13 @@ import { NotesService } from '../notes.service';
 })
 export class EditNotePage implements OnInit {
   @ViewChild('form', {static: true}) form: NgForm;
+
   currentCollection: Collection;
   collectionId: string;
   noteId: string;
   editedNote: Note;
+  maxLength: number;
+  maxLimit = false;
 
   constructor(
     private loadingCtrl: LoadingController,
@@ -36,7 +39,10 @@ export class EditNotePage implements OnInit {
       this.collectionId = this.currentCollection.id;
       this.noteId = paramMap.get('noteId');
       this.editedNote = this.notesService.selectedNote;
-      console.log(this.editedNote.text);
+      this.maxLength = 1800 - this.editedNote.text.length;
+      if (this.editedNote.text.length >= 1800) {
+        this.maxLimit = true;
+      }
     });
   }
 
@@ -44,14 +50,25 @@ export class EditNotePage implements OnInit {
     if (this.form.invalid) {
       return;
     }
-    this.loadingCtrl.create({message: 'Creating note...'}).then(loadingEl => {
+    this.loadingCtrl.create({message: 'Editing note...'}).then(loadingEl => {
       loadingEl.present();
     });
     // tslint:disable-next-line: max-line-length
     this.collectionsService.editNoteFromFirebase(this.collectionsService.selectedCollection.id, this.noteId, this.editedNote.text + this.form.value['note-text']).subscribe(() => {
-      this.loadingCtrl.dismiss();
-      this.router.navigate(['/', 'collections', this.collectionId]);
+      setTimeout(() => {
+        this.loadingCtrl.dismiss();
+        this.router.navigate(['/', 'collections', this.collectionId]);
+      }, 500);
     });
+  }
+
+  onTextEnter() {
+    if (this.editedNote.text.length + this.form.value['note-text'].length >= 1800) {
+      this.maxLimit = true;
+    } else {
+      this.maxLimit = false;
+    }
+    console.log(this.editedNote.text.length + this.form.value['note-text'].length, this.maxLimit);
   }
 
 }

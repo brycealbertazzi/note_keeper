@@ -38,8 +38,10 @@ export class AddNotePage implements OnInit {
     });
     // tslint:disable-next-line: max-line-length
     this.collectionsService.addNoteToFirebase(this.collectionsService.selectedCollection.id, this.form.value['note-text']).subscribe(() => {
-      this.loadingCtrl.dismiss();
-      this.router.navigate(['/', 'collections', this.id]);
+      setTimeout(() => {
+        this.loadingCtrl.dismiss();
+        this.router.navigate(['/', 'collections', this.id]);
+      }, 500);
     });
   }
 

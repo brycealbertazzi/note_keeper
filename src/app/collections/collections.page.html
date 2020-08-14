@@ -10,10 +10,25 @@
       <ion-card-title>{{collection.name}}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <ion-button color="secondary" (click)="goToNotes(collection.id)" [routerLink]="['/', 'collections', collection.id]">
-        <ion-icon name="book-outline" slot="end"></ion-icon>
-        Notes
-      </ion-button>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <div class="ion-text-left">
+              <ion-button color="secondary" [routerLink]="['/', 'collections', collection.id]">
+                <ion-icon name="book-outline" slot="end"></ion-icon>
+                Notes
+              </ion-button>
+            </div>
+          </ion-col>
+          <ion-col>
+            <div class="ion-text-right">
+              <ion-button color="danger" (click)="onDeleteCollection(collection.id)">
+                <ion-icon name="close-outline"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-card-content>
   </ion-card>
 

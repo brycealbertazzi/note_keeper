@@ -71,12 +71,14 @@ export class NotesPage implements OnInit {
           handler: () => {
             this.loadingCtrl.create({message: 'Deleting note...'}).then(loadingEl => {
               loadingEl.present();
-            })
+            });
             // Pass in the current collection id and the note id
             this.collectionsService.deleteNoteFromFirebase(noteId, this.collectionId).subscribe(() => {
-              this.loadingCtrl.dismiss();
-              window.location.reload();
-              this.router.navigate(['/', 'collections', this.collectionId]);
+              setTimeout(() => {
+                this.loadingCtrl.dismiss();
+                window.location.reload();
+                this.router.navigate(['/', 'collections', this.collectionId]);
+              }, 500);
             });
           }
         }

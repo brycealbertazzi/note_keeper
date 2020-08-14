@@ -24,7 +24,7 @@ export class CollectionsService {
 
   constructor(private http: HttpClient) { }
 
-  addCollection(name: string, notes: Note[]) {
+  addCollectionToFirebase(name: string, notes: Note[]) {
     // tslint:disable-next-line: max-line-length
     const newCollection = {
       id: null,
@@ -40,6 +40,11 @@ export class CollectionsService {
 
   get collections() {
     return [...this._collections];
+  }
+
+  deleteCollectionFromFirebase(id: string) {
+    this._collections = this.collections.filter(c => c.id !== id);
+    return this.http.delete(`https://note-keeper-3e377.firebaseio.com/collections/${id}.json`);
   }
 
   getCollectionsFromFirebase() {
