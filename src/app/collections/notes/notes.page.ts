@@ -16,6 +16,7 @@ export class NotesPage implements OnInit {
   collectionId: string;
   title: string;
   notes: Note[];
+  id: string;
 
   constructor(
     private collectionsService: CollectionsService,
@@ -34,6 +35,7 @@ export class NotesPage implements OnInit {
         return;
       }
       this.collectionsService.getSelectedCollectionFromFirebase(paramMap.get('collectionId')).subscribe(collection => {
+        this.id = paramMap.get('collectionId')
         this.currentCollection = collection;
         this.collectionId = this.currentCollection.id;
         this.title = this.currentCollection.name;
